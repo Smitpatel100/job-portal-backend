@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,9 +21,14 @@ private String name;
 private String email;
 private String password;
 
+@Enumerated(EnumType.STRING)
+@Column(nullable = false)
+private Role role;
+
 public User() {
 	super();
-	// TODO Auto-generated constructor stub
+	this.role=Role.CANDIDATE;
+	
 }
 
 
