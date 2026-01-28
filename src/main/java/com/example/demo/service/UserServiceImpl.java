@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.LoginResponse;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 
@@ -31,6 +33,19 @@ public class UserServiceImpl implements UserServices{
 	@Override
 	public List<User> getAllUsers() {
 		return userRepo.findAll();
+	}
+
+
+
+	@Override
+	public LoginResponse login(LoginRequest request) {
+		User user = userRepo.findByEmail(request.getEmail())
+				.orElseThrow(() ->new RuntimeException("user not found"));
+		
+		if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+				throw new RuntimeException("invalid password");
+		}
+		return new LoginResponse("login successful");
 	}
 
 }
