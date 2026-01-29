@@ -9,23 +9,31 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtUtil;
 
 @Service
 public class UserServiceImpl implements UserServices{
 	private final UserRepository userRepo;
 	private final BCryptPasswordEncoder passwordEncoder;
+	private final JwtUtil jwtUtil;
+
 	
 
-	public UserServiceImpl(UserRepository userRepo, BCryptPasswordEncoder encoder) {
+	public UserServiceImpl(UserRepository userRepo, BCryptPasswordEncoder encoder,JwtUtil jwtUtil) {
 		super();
 		this.userRepo = userRepo;
 		this.passwordEncoder = encoder;
+	    this.jwtUtil = jwtUtil;
 	}
 	
 	
 
 	@Override
 	public User saveUser(User user) {
+		if(userRepo.findByEmail(user.getEmail()).isPresent()) {
+		    throw new RuntimeException("Email already exists");
+		}
+
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepo.save(user);
 	}
@@ -45,7 +53,8 @@ public class UserServiceImpl implements UserServices{
 		if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 				throw new RuntimeException("invalid password");
 		}
-		return new LoginResponse("login successful");
+		String token = jwtUtil.generateToken(user.getEmail());
+		return new LoginResponse(token);
 	}
 
 }
