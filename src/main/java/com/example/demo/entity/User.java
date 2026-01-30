@@ -21,6 +21,7 @@ private String name;
 private String email;
 private String password;
 
+
 @Enumerated(EnumType.STRING)
 @Column(nullable = false)
 private Role role;
@@ -57,6 +58,14 @@ public String getPassword() {
 public void setPassword(String password) {
 	this.password = password;
 }
+public Role getRole() {
+    return role;
+}
+
+public void setRole(Role role) {
+    this.role = role;
+}
+
 
 
 @Override

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UserRequestDTO;
+import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserServiceImpl;
 import com.example.demo.service.UserServices;
@@ -23,9 +25,9 @@ public UserController(UserServices userser) {
 	this.userser = userser;
 }
 
-@PostMapping
-public User createUser(@RequestBody User u) {
-	return userser.saveUser(u);
+@PostMapping("/register")
+public UserResponseDTO register(@RequestBody UserRequestDTO dto) {
+    return userser.register(dto);
 }
 
 @GetMapping

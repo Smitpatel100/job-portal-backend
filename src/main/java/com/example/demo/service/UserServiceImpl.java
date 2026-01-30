@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.UserRequestDTO;
+import com.example.demo.dto.UserResponseDTO;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtUtil;
@@ -29,14 +32,27 @@ public class UserServiceImpl implements UserServices{
 	
 
 	@Override
-	public User saveUser(User user) {
-		if(userRepo.findByEmail(user.getEmail()).isPresent()) {
-		    throw new RuntimeException("Email already exists");
-		}
+    public UserResponseDTO register(UserRequestDTO dto) {
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userRepo.save(user);
-	}
+        if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(Role.CANDIDATE);
+
+        User saved = userRepo.save(user);
+
+        return new UserResponseDTO(
+                saved.getId(),
+                saved.getName(),
+                saved.getEmail(),
+                saved.getRole().name()
+        );
+    }
 
 	@Override
 	public List<User> getAllUsers() {
@@ -51,7 +67,8 @@ public class UserServiceImpl implements UserServices{
 				.orElseThrow(() ->new RuntimeException("user not found"));
 		
 		if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-				throw new RuntimeException("invalid password");
+			throw new IllegalArgumentException("Invalid password");
+
 		}
 		String token = jwtUtil.generateToken(user.getEmail());
 		return new LoginResponse(token);
