@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +30,9 @@ public UserResponseDTO register(@RequestBody UserRequestDTO dto) {
     return userser.register(dto);
 }
 
+@PreAuthorize("hasRole('ADMIN')")
 @GetMapping
-public List<User> getUsers(){
+public List<UserResponseDTO> getUsers(){
 	return userser.getAllUsers();
 }
 }

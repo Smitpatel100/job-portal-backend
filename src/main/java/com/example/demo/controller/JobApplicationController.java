@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class JobApplicationController {
 		this.jobser = jobser;
 	 }
 	 
+	    @PreAuthorize("hasRole('CANDIDATE')")
 	    @PostMapping
 	    public JobApplicationResponseDTO apply(@RequestBody JobApplication app) {
 			return jobser.apply(app);

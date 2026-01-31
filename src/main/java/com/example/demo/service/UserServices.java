@@ -10,6 +10,6 @@ import com.example.demo.entity.User;
 
 public interface UserServices{
 UserResponseDTO register(UserRequestDTO dto);
-List<User> getAllUsers();
+List<UserResponseDTO> getAllUsers();
 LoginResponse login(LoginRequest request);
 }

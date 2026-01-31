@@ -55,9 +55,18 @@ public class UserServiceImpl implements UserServices{
     }
 
 	@Override
-	public List<User> getAllUsers() {
-		return userRepo.findAll();
+	public List<UserResponseDTO> getAllUsers() {
+	    return userRepo.findAll()
+	            .stream()
+	            .map(user -> new UserResponseDTO(
+	                    user.getId(),
+	                    user.getName(),
+	                    user.getEmail(),
+	                    user.getRole().name()
+	            ))
+	            .toList();
 	}
+
 
 
 
@@ -70,7 +79,10 @@ public class UserServiceImpl implements UserServices{
 			throw new IllegalArgumentException("Invalid password");
 
 		}
-		String token = jwtUtil.generateToken(user.getEmail());
+		String token = jwtUtil.generateToken(
+		        user.getEmail(),
+		        user.getRole().name()
+		);
 		return new LoginResponse(token);
 	}
 

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ public class JobController {
 		this.jobser = jobser;
 	}
 	
+    @PreAuthorize("hasRole('EMPLOYER')")
 	@PostMapping
 	public Job createJob(@RequestBody Job j) {
 		return jobser.createJob(j);
