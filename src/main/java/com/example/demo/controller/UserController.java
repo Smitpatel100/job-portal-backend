@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.entity.User;
@@ -26,13 +27,23 @@ public UserController(UserServices userser) {
 }
 
 @PostMapping("/register")
-public UserResponseDTO register(@RequestBody UserRequestDTO dto) {
-    return userser.register(dto);
+public ApiResponse<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
+    return new ApiResponse<>(
+            true,
+            "User registered successfully",
+            userser.register(dto)
+    );
 }
 
-@PreAuthorize("hasRole('ADMIN')")
+
 @GetMapping
-public List<UserResponseDTO> getUsers(){
-	return userser.getAllUsers();
+@PreAuthorize("hasRole('ADMIN')")
+public ApiResponse<List<UserResponseDTO>> getUsers() {
+    return new ApiResponse<>(
+            true,
+            "Users fetched successfully",
+            userser.getAllUsers()
+    );
 }
+
 }

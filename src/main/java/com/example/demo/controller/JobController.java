@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.entity.Job;
 import com.example.demo.service.JobService;
 
@@ -23,15 +24,25 @@ public class JobController {
 		this.jobser = jobser;
 	}
 	
-    @PreAuthorize("hasRole('EMPLOYER')")
+	@PreAuthorize("hasRole('EMPLOYER')")
 	@PostMapping
-	public Job createJob(@RequestBody Job j) {
-		return jobser.createJob(j);
+	public ApiResponse<Job> createJob(@RequestBody Job j) {
+	    return new ApiResponse<>(
+	            true,
+	            "Job created successfully",
+	            jobser.createJob(j)
+	    );
 	}
+
     
-	@GetMapping
-	public List<Job> getAllJobs() {
-		return jobser.getAllJobs();
-	}
+    @GetMapping
+    public ApiResponse<List<Job>> getAllJobs() {
+        return new ApiResponse<>(
+                true,
+                "Jobs fetched successfully",
+                jobser.getAllJobs()
+        );
+    }
+
 
 }

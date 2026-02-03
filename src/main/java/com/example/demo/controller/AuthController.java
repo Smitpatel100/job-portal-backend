@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.service.UserServices;
@@ -21,7 +22,12 @@ public class AuthController {
 	}
      
 	@PostMapping("/login")
-    public LoginResponse Login(@RequestBody LoginRequest req) {
-    	    return userser.login(req);
-    }
+	public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+	    return new ApiResponse<>(
+	            true,
+	            "Login successful",
+	            userser.login(request)
+	    );
+	}
+
 }

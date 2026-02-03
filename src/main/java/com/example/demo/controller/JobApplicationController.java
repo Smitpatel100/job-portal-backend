@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.JobApplicationResponseDTO;
 import com.example.demo.entity.JobApplication;
 import com.example.demo.service.JobAppService;
@@ -14,17 +15,21 @@ import com.example.demo.service.JobAppService;
 @RequestMapping("/api/application")
 public class JobApplicationController {
 
-	 private final JobAppService jobser;
+    private final JobAppService jobser;
 
-	 public JobApplicationController(JobAppService jobser) {
-		super();
-		this.jobser = jobser;
-	 }
-	 
-	    @PreAuthorize("hasRole('CANDIDATE')")
-	    @PostMapping
-	    public JobApplicationResponseDTO apply(@RequestBody JobApplication app) {
-			return jobser.apply(app);
-	    }
-		
-	 }
+    public JobApplicationController(JobAppService jobser) {
+        this.jobser = jobser;
+    }
+
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @PostMapping
+    public ApiResponse<JobApplicationResponseDTO> apply(
+            @RequestBody JobApplication app
+    ) {
+        return new ApiResponse<>(
+                true,
+                "Job applied successfully",
+                jobser.apply(app)
+        );
+    }
+}
